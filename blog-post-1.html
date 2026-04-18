@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Gallic Wars — Julius Caesar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #FFFFFF;
+      --ink:   #1A0A0A;
+      --gold:  #B22222;
+      --ash:   #555555;
+      --stone: #999999;
+      --serif:   'Cormorant Garamond', Georgia, serif;
+      --display: 'Cinzel', serif;
+      --body:    'EB Garamond', Georgia, serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--body); background: var(--cream); color: var(--ink); font-size: 18px; line-height: 1.75; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    .site-header { position: fixed; top:0; left:0; right:0; z-index:200; background: rgba(255,255,255,0.96); backdrop-filter: blur(16px); }
+    .nav-meander { height:16px; line-height:0; overflow:hidden; }
+    .site-nav { display:flex; align-items:center; justify-content:space-between; height:78px; max-width:1200px; margin:0 auto; padding:0 2.5rem; }
+    .nav-logo { display:flex; align-items:center; gap:0.6rem; text-decoration:none; }
+    .nav-logo svg { width:20px; height:20px; color:#B22222; flex-shrink:0; }
+    .nav-logo-text { font-family:var(--display); font-size:0.9rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#B22222; line-height:1; }
+    .nav-logo-text em { color:#1A0808; font-style:normal; font-weight:400; }
+    .nav-links { display:flex; align-items:center; gap:0.25rem; list-style:none; }
+    .nav-links a { font-family:var(--display); font-size:0.62rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#7A5252; text-decoration:none; padding:0.5rem 0.85rem; border-radius:4px; transition:color 0.2s, background 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color:#B22222; background:rgba(178,34,34,0.07); }
+    .nav-toggle { display:none; align-items:center; justify-content:center; width:40px; height:40px; background:transparent; border:1px solid rgba(178,34,34,0.3); border-radius:6px; cursor:pointer; color:#B22222; padding:0; transition:background 0.2s; }
+    .nav-toggle svg { width:22px; height:22px; overflow:visible; }
+    .toggle-path { fill:none; stroke:#B22222; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .toggle-top { stroke-dasharray:12 63; stroke-dashoffset:0; }
+    .nav-toggle.open svg { transform:rotate(-45deg); }
+    .nav-toggle.open .toggle-top { stroke-dasharray:20 300; stroke-dashoffset:-32.42px; }
+
+    /* ── DRAWER ── */
+    .drawer-overlay { position:fixed; inset:0; z-index:190; background:rgba(26,8,8,0.35); backdrop-filter:blur(4px); opacity:0; pointer-events:none; transition:opacity 0.35s; }
+    .drawer-overlay.open { opacity:1; pointer-events:auto; }
+    .drawer { position:fixed; top:0; left:0; bottom:0; z-index:195; width:min(75vw,320px); background:#FFFFFF; border-right:1px solid rgba(178,34,34,0.15); display:flex; flex-direction:column; transform:translateX(-100%); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+    .drawer.open { transform:translateX(0); }
+    .drawer-brand { display:flex; align-items:center; gap:0.6rem; padding:1.5rem 1.25rem; border-bottom:1px solid rgba(178,34,34,0.12); }
+    .drawer-brand-text { font-family:var(--display); font-size:0.78rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#B22222; }
+    .drawer-links { display:flex; flex-direction:column; gap:0.25rem; padding:1.5rem 1rem; flex:1; }
+    .drawer-links a { font-family:var(--display); font-size:0.68rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#7A5252; text-decoration:none; padding:0.65rem 0.85rem; border-radius:6px; transition:color 0.2s, background 0.2s; }
+    .drawer-links a:hover { color:#B22222; background:rgba(178,34,34,0.07); }
+    .drawer-footer { padding:1.25rem; border-top:1px solid rgba(178,34,34,0.12); }
+    .drawer-cta { display:block; font-family:var(--display); font-size:0.62rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; text-align:center; background:#B22222; color:#fff; padding:0.85rem 1.5rem; text-decoration:none; transition:background 0.2s; }
+    .drawer-cta:hover { background:#8B0000; }
+
+    /* ── ARTICLE LAYOUT ── */
+    .post-hero {
+      padding-top: 120px;
+      padding-bottom: 4rem;
+      padding-left: clamp(1.5rem, 8vw, 10rem);
+      padding-right: clamp(1.5rem, 8vw, 10rem);
+      border-bottom: 1px solid #EEEEEE;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .post-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--display);
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--stone);
+      text-decoration: none;
+      margin-bottom: 2.5rem;
+      transition: color 0.2s;
+    }
+    .post-back:hover { color: var(--gold); }
+    .post-tag {
+      font-family: var(--display);
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+    .post-title {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+    .post-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-family: var(--display);
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--stone);
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--gold);
+    }
+    .post-body {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3.5rem clamp(1.5rem, 8vw, 10rem) 6rem;
+    }
+    .post-body p { font-size: 1.1rem; line-height: 1.85; color: #3A3030; margin-bottom: 1.6rem; }
+    .post-body h2 {
+      font-family: var(--display);
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 700;
+      color: var(--ink);
+      margin: 3rem 0 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #EEEEEE;
+    }
+    .post-body h3 {
+      font-family: var(--display);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin: 2rem 0 0.8rem;
+      text-transform: uppercase;
+    }
+    .post-pullquote {
+      border-left: 3px solid var(--gold);
+      margin: 2.5rem 0;
+      padding: 0.5rem 0 0.5rem 2rem;
+    }
+    .post-pullquote p {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.4rem !important;
+      line-height: 1.5 !important;
+      color: var(--ink) !important;
+      margin: 0 !important;
+    }
+    .post-pullquote cite {
+      display: block;
+      margin-top: 0.7rem;
+      font-family: var(--display);
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--stone);
+      font-style: normal;
+    }
+    .post-divider { width: 40px; height: 2px; background: var(--gold); margin: 2.5rem 0; }
+    .post-img {
+      width: 100%;
+      margin: 2.5rem 0;
+      position: relative;
+    }
+    .post-img img { width: 100%; display: block; filter: sepia(12%) contrast(1.05); }
+    .post-img figcaption {
+      font-family: var(--display);
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin-top: 0.6rem;
+    }
+
+    /* ── FOOTER ── */
+    footer { background: #7A0A0A; color: rgba(255,255,255,0.8); padding: 4rem 3rem; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; max-width: 100%; }
+    .footer-brand .footer-logo { font-family:var(--display); font-size:1.1rem; font-weight:700; letter-spacing:0.2em; color:#fff; margin-bottom:0.75rem; }
+    .footer-brand .footer-tagline { font-family:var(--body); font-size:0.9rem; line-height:1.6; color:rgba(255,255,255,0.55); }
+    .footer-nav h4 { font-family:var(--display); font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:1rem; }
+    .footer-nav ul { list-style:none; display:flex; flex-direction:column; gap:0.6rem; }
+    .footer-nav a { font-family:var(--display); font-size:0.68rem; letter-spacing:0.12em; color:rgba(255,255,255,0.7); text-decoration:none; transition:color 0.2s; }
+    .footer-nav a:hover { color:#fff; }
+    .footer-bottom { background:#600808; padding:1rem 3rem; font-family:var(--display); font-size:0.55rem; letter-spacing:0.15em; color:rgba(255,255,255,0.3); }
+
+    @media (max-width: 900px) {
+      .nav-links { display:none; }
+      .nav-toggle { display:flex; }
+      footer { grid-template-columns:1fr; gap:2rem; padding:3rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="site-header">
+    <nav class="site-nav">
+      <a href="index.html" class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/>
+        </svg>
+        <span class="nav-logo-text">Caesar <em>· SPQR</em></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#blog" class="active">Blog</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" onclick="toggleDrawer()" aria-label="Open menu">
+        <svg viewBox="0 0 32 32">
+          <path class="toggle-path toggle-top" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"/>
+          <path class="toggle-path toggle-mid" d="M7 16 27 16"/>
+        </svg>
+      </button>
+    </nav>
+    <div class="nav-meander" aria-hidden="true">
+      <svg width="100%" height="16" style="display:block" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="gk" x="0" y="0" width="32" height="16" patternUnits="userSpaceOnUse">
+            <rect width="32" height="16" fill="#6B0808"/>
+            <polyline points="0,8 8,8 8,2 24,2 24,14 16,14 16,8 32,8"
+              fill="none" stroke="white" stroke-width="2"
+              stroke-linejoin="miter" stroke-linecap="square"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="16" fill="url(#gk)"/>
+      </svg>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-brand">
+      <span class="drawer-brand-text">Caesar <em style="color:#1A0808;font-style:normal;font-weight:400;">· SPQR</em></span>
+    </div>
+    <div class="drawer-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="index.html#blog">Blog</a>
+    </div>
+    <div class="drawer-footer">
+      <a href="index.html#blog" class="drawer-cta" onclick="closeDrawer()">Back to Blog</a>
+    </div>
+  </div>
+
+  <!-- ARTICLE -->
+  <div class="post-hero">
+    <a href="index.html#blog" class="post-back">← Back to Blog</a>
+    <div class="post-tag">Military Strategy</div>
+    <h1 class="post-title">Why Caesar's Gallic Wars Changed Europe Forever</h1>
+    <div class="post-meta">
+      <span>8 min read</span>
+      <span>58–50 BC</span>
+      <span>Military History</span>
+    </div>
+  </div>
+
+  <div class="post-body">
+
+    <p>Between 58 and 50 BC, Julius Caesar led eight years of continuous military campaigns across the territory known to Romans as Gaul — encompassing modern France, Belgium, Switzerland, and parts of Germany and Britain. What began as a provincial governorship became one of the most consequential military ventures in Western history, fundamentally altering the political geography of Europe and establishing Caesar as the dominant force in Rome.</p>
+
+    <div class="post-pullquote">
+      <p>"It is not enough to be Caesar's friend — one must be Caesar's soldier."</p>
+      <cite>— Attributed to Caesar's Legionaries</cite>
+    </div>
+
+    <h2>The Opening Moves — 58 BC</h2>
+    <p>Caesar's pretext for war came swiftly. The Helvetii, a Celtic tribe from modern Switzerland, were migrating westward through Roman-allied territory. Caesar intercepted them, inflicted a catastrophic defeat, and forced their return home. Within months he had also repelled the Germanic chieftain Ariovistus. Two campaigns, two victories — and Caesar had barely unpacked.</p>
+
+    <p>What distinguished Caesar from other Roman commanders was the speed of his decision-making. He routinely covered distances in days that peers expected to take weeks, forcing enemies to react rather than plan. He was, in modern terms, inside his opponents' decision loop before they knew the game had begun.</p>
+
+    <h2>The Engineering of War</h2>
+    <p>Caesar's genius was not limited to tactics. His army built with extraordinary speed. When he decided to cross the Rhine in 55 BC to demonstrate Roman power to the Germanic tribes, his engineers constructed a timber bridge across the wide, fast-flowing river in just ten days. He crossed, made his display, then dismantled the bridge entirely — a statement as much symbolic as strategic.</p>
+
+    <figure class="post-img">
+      <img src="gallery/rhine-bridge.jpg" alt="Caesar's Bridge over the Rhine" />
+      <figcaption>Historical reconstruction of Caesar's Rhine bridge · 55 BC</figcaption>
+    </figure>
+
+    <p>The same genius for engineering reached its apex at the Siege of Alesia in 52 BC — widely considered the greatest feat of military engineering in antiquity. Facing Vercingetorix, the unifying chieftain of the Gallic resistance, inside the hilltop stronghold of Alesia, Caesar ordered the construction of two simultaneous walls.</p>
+
+    <h2>Alesia — Rome's Greatest Siege</h2>
+    <p>The inner wall (the <em>circumvallation</em>) ran some 11 miles, encircling Alesia entirely to starve the defenders. The outer wall (the <em>contravallation</em>), extending to nearly 14 miles, faced outward against the Gallic relief army — estimated by ancient sources at 250,000 men. Caesar's force of roughly 50,000 was now sandwiched between two enemies, neither of which it had yet defeated.</p>
+
+    <div class="post-pullquote">
+      <p>"Caesar, confronting the impossible, built walls instead of excuses."</p>
+      <cite>— Modern military historian</cite>
+    </div>
+
+    <p>The result was decisive. The relief army shattered against Caesar's fortifications. Vercingetorix, recognising that further resistance meant only starvation, rode out of Alesia and threw his weapons at Caesar's feet. The Gallic Wars were effectively over. One million Gauls had died; another million had been enslaved.</p>
+
+    <figure class="post-img">
+      <img src="gallery/vercingetorix.jpg" alt="Surrender at Alesia" />
+      <figcaption>Surrender at Alesia · Lionel Royer, 1899 · Oil on canvas</figcaption>
+    </figure>
+
+    <h2>The Legacy That Outlasted Rome</h2>
+    <p>The Gallic Wars reshaped Europe's cultural and linguistic map. Roman governance, Latin language, and Mediterranean culture took deep root in formerly Celtic territories. Modern French, the language of diplomacy for centuries, descends directly from the Vulgar Latin that Caesar's legions spread across Gaul.</p>
+
+    <p>Militarily, Caesar's <em>Commentarii de Bello Gallico</em> — his own account of the campaigns, written in elegant third-person prose — became the most studied military document of the Renaissance and early modern period. Napoleon read it obsessively. Wellington referenced it. Patton kept it on his desk.</p>
+
+    <div class="post-divider"></div>
+    <p>Two thousand years on, the Gallic Wars remain a masterclass in the relationship between military force, political will, and the reshaping of civilisations. Caesar did not merely conquer Gaul. He invented Western Europe.</p>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <div class="footer-logo">JULIUS CAESAR</div>
+      <p class="footer-tagline">A digital tribute to the life, campaigns, and enduring legacy of Rome's most consequential statesman.</p>
+    </div>
+    <nav class="footer-nav">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#blog">Blog</a></li>
+      </ul>
+    </nav>
+    <nav class="footer-nav">
+      <h4>Blog Posts</h4>
+      <ul>
+        <li><a href="blog-post-1.html">The Gallic Wars</a></li>
+        <li><a href="blog-post-2.html">Leadership Lessons</a></li>
+        <li><a href="blog-post-3.html">The Ides of March</a></li>
+      </ul>
+    </nav>
+  </footer>
+  <div class="footer-bottom"></div>
+
+  <script>
+    function toggleDrawer() {
+      const open = document.getElementById('drawer').classList.toggle('open');
+      document.getElementById('drawerOverlay').classList.toggle('open', open);
+      document.getElementById('navToggle').classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('drawerOverlay').classList.remove('open');
+      document.getElementById('navToggle').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+  </script>
+</body>
+</html>

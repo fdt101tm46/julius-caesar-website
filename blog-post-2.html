@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leadership Lessons from Julius Caesar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cream:#FFFFFF; --ink:#1A0A0A; --gold:#B22222; --ash:#555555; --stone:#999999; --serif:'Cormorant Garamond',Georgia,serif; --display:'Cinzel',serif; --body:'EB Garamond',Georgia,serif; }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--body); background:var(--cream); color:var(--ink); font-size:18px; line-height:1.75; overflow-x:hidden; }
+    .site-header { position:fixed; top:0; left:0; right:0; z-index:200; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); }
+    .nav-meander { height:16px; line-height:0; overflow:hidden; }
+    .site-nav { display:flex; align-items:center; justify-content:space-between; height:78px; max-width:1200px; margin:0 auto; padding:0 2.5rem; }
+    .nav-logo { display:flex; align-items:center; gap:0.6rem; text-decoration:none; }
+    .nav-logo svg { width:20px; height:20px; color:#B22222; flex-shrink:0; }
+    .nav-logo-text { font-family:var(--display); font-size:0.9rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#B22222; }
+    .nav-logo-text em { color:#1A0808; font-style:normal; font-weight:400; }
+    .nav-links { display:flex; align-items:center; gap:0.25rem; list-style:none; }
+    .nav-links a { font-family:var(--display); font-size:0.62rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#7A5252; text-decoration:none; padding:0.5rem 0.85rem; border-radius:4px; transition:color 0.2s,background 0.2s; }
+    .nav-links a:hover,.nav-links a.active { color:#B22222; background:rgba(178,34,34,0.07); }
+    .nav-toggle { display:none; align-items:center; justify-content:center; width:40px; height:40px; background:transparent; border:1px solid rgba(178,34,34,0.3); border-radius:6px; cursor:pointer; padding:0; }
+    .nav-toggle svg { width:22px; height:22px; overflow:visible; }
+    .toggle-path { fill:none; stroke:#B22222; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .toggle-top { stroke-dasharray:12 63; }
+    .nav-toggle.open svg { transform:rotate(-45deg); }
+    .nav-toggle.open .toggle-top { stroke-dasharray:20 300; stroke-dashoffset:-32.42px; }
+    .drawer-overlay { position:fixed; inset:0; z-index:190; background:rgba(26,8,8,0.35); backdrop-filter:blur(4px); opacity:0; pointer-events:none; transition:opacity 0.35s; }
+    .drawer-overlay.open { opacity:1; pointer-events:auto; }
+    .drawer { position:fixed; top:0; left:0; bottom:0; z-index:195; width:min(75vw,320px); background:#FFF; border-right:1px solid rgba(178,34,34,0.15); display:flex; flex-direction:column; transform:translateX(-100%); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+    .drawer.open { transform:translateX(0); }
+    .drawer-brand { padding:1.5rem 1.25rem; border-bottom:1px solid rgba(178,34,34,0.12); font-family:var(--display); font-size:0.78rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#B22222; }
+    .drawer-links { display:flex; flex-direction:column; gap:0.25rem; padding:1.5rem 1rem; flex:1; }
+    .drawer-links a { font-family:var(--display); font-size:0.68rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#7A5252; text-decoration:none; padding:0.65rem 0.85rem; border-radius:6px; transition:color 0.2s,background 0.2s; }
+    .drawer-links a:hover { color:#B22222; background:rgba(178,34,34,0.07); }
+    .drawer-footer { padding:1.25rem; border-top:1px solid rgba(178,34,34,0.12); }
+    .drawer-cta { display:block; font-family:var(--display); font-size:0.62rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; text-align:center; background:#B22222; color:#fff; padding:0.85rem 1.5rem; text-decoration:none; transition:background 0.2s; }
+    .drawer-cta:hover { background:#8B0000; }
+    .post-hero { padding-top:120px; padding-bottom:4rem; padding-left:clamp(1.5rem,8vw,10rem); padding-right:clamp(1.5rem,8vw,10rem); border-bottom:1px solid #EEEEEE; max-width:860px; margin:0 auto; }
+    .post-back { display:inline-flex; align-items:center; gap:0.4rem; font-family:var(--display); font-size:0.58rem; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:var(--stone); text-decoration:none; margin-bottom:2.5rem; transition:color 0.2s; }
+    .post-back:hover { color:var(--gold); }
+    .post-tag { font-family:var(--display); font-size:0.58rem; font-weight:600; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; }
+    .post-title { font-family:var(--display); font-size:clamp(2rem,5vw,3.2rem); font-weight:700; line-height:1.1; color:var(--ink); margin-bottom:1.5rem; }
+    .post-meta { display:flex; gap:1.5rem; font-family:var(--display); font-size:0.58rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--stone); padding-bottom:2rem; border-bottom:2px solid var(--gold); }
+    .post-body { max-width:860px; margin:0 auto; padding:3.5rem clamp(1.5rem,8vw,10rem) 6rem; }
+    .post-body p { font-size:1.1rem; line-height:1.85; color:#3A3030; margin-bottom:1.6rem; }
+    .post-body h2 { font-family:var(--display); font-size:clamp(1.2rem,2.5vw,1.6rem); font-weight:700; color:var(--ink); margin:3rem 0 1.2rem; padding-top:1rem; border-top:1px solid #EEEEEE; }
+    .post-pullquote { border-left:3px solid var(--gold); margin:2.5rem 0; padding:0.5rem 0 0.5rem 2rem; }
+    .post-pullquote p { font-family:var(--serif); font-style:italic; font-size:1.4rem !important; line-height:1.5 !important; color:var(--ink) !important; margin:0 !important; }
+    .post-pullquote cite { display:block; margin-top:0.7rem; font-family:var(--display); font-size:0.58rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--stone); font-style:normal; }
+    .post-divider { width:40px; height:2px; background:var(--gold); margin:2.5rem 0; }
+    .post-img { width:100%; margin:2.5rem 0; }
+    .post-img img { width:100%; display:block; filter:sepia(12%) contrast(1.05); }
+    .post-img figcaption { font-family:var(--display); font-size:0.55rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--stone); margin-top:0.6rem; }
+    .lesson-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem; margin:2rem 0 2.5rem; }
+    .lesson-card { border-top:2px solid var(--gold); padding:1.5rem 0 0; }
+    .lesson-num { font-family:var(--display); font-size:0.55rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:0.5rem; }
+    .lesson-title { font-family:var(--display); font-size:0.85rem; font-weight:700; color:var(--ink); margin-bottom:0.6rem; }
+    .lesson-desc { font-family:var(--body); font-size:0.95rem; line-height:1.6; color:var(--ash); }
+    footer { background:#7A0A0A; color:rgba(255,255,255,0.8); padding:4rem 3rem; display:grid; grid-template-columns:2fr 1fr 1fr; gap:3rem; }
+    .footer-logo { font-family:var(--display); font-size:1.1rem; font-weight:700; letter-spacing:0.2em; color:#fff; margin-bottom:0.75rem; }
+    .footer-tagline { font-family:var(--body); font-size:0.9rem; line-height:1.6; color:rgba(255,255,255,0.55); }
+    .footer-nav h4 { font-family:var(--display); font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:1rem; }
+    .footer-nav ul { list-style:none; display:flex; flex-direction:column; gap:0.6rem; }
+    .footer-nav a { font-family:var(--display); font-size:0.68rem; letter-spacing:0.12em; color:rgba(255,255,255,0.7); text-decoration:none; transition:color 0.2s; }
+    .footer-nav a:hover { color:#fff; }
+    .footer-bottom { background:#600808; padding:1rem 3rem; }
+    @media (max-width:900px) { .nav-links{display:none;} .nav-toggle{display:flex;} footer{grid-template-columns:1fr;gap:2rem;padding:3rem 2rem;} }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="site-nav">
+      <a href="index.html" class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>
+        <span class="nav-logo-text">Caesar <em>· SPQR</em></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#blog" class="active">Blog</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" onclick="toggleDrawer()" aria-label="Open menu">
+        <svg viewBox="0 0 32 32"><path class="toggle-path toggle-top" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"/><path class="toggle-path toggle-mid" d="M7 16 27 16"/></svg>
+      </button>
+    </nav>
+    <div class="nav-meander" aria-hidden="true">
+      <svg width="100%" height="16" style="display:block" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="gk" x="0" y="0" width="32" height="16" patternUnits="userSpaceOnUse">
+            <rect width="32" height="16" fill="#6B0808"/>
+            <polyline points="0,8 8,8 8,2 24,2 24,14 16,14 16,8 32,8"
+              fill="none" stroke="white" stroke-width="2"
+              stroke-linejoin="miter" stroke-linecap="square"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="16" fill="url(#gk)"/>
+      </svg>
+    </div>
+  </header>
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-brand">Caesar · SPQR</div>
+    <div class="drawer-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="index.html#blog">Blog</a>
+    </div>
+    <div class="drawer-footer"><a href="index.html#blog" class="drawer-cta" onclick="closeDrawer()">Back to Blog</a></div>
+  </div>
+
+  <div class="post-hero">
+    <a href="index.html#blog" class="post-back">← Back to Blog</a>
+    <div class="post-tag">Leadership &amp; Legacy</div>
+    <h1 class="post-title">Leadership Lessons from Julius Caesar</h1>
+    <div class="post-meta"><span>7 min read</span><span>100–44 BC</span><span>Command &amp; Character</span></div>
+  </div>
+
+  <div class="post-body">
+    <p>Two thousand years after his assassination, Julius Caesar remains one of the most studied leaders in human history. Military academies, business schools, and political scientists continue to dissect his methods. What made a man from a middling patrician family the most powerful person in the ancient world — and why do his lessons still hold?</p>
+
+    <div class="post-pullquote">
+      <p>"Men willingly believe what they wish to believe."</p>
+      <cite>— Julius Caesar, De Bello Gallico</cite>
+    </div>
+
+    <h2>Five Principles Caesar Lived By</h2>
+    <div class="lesson-grid">
+      <div class="lesson-card"><div class="lesson-num">Lesson 01</div><div class="lesson-title">Lead from the front</div><div class="lesson-desc">Caesar routinely fought alongside his men. At Zela, he grabbed a shield from a fleeing soldier and held the line himself.</div></div>
+      <div class="lesson-card"><div class="lesson-num">Lesson 02</div><div class="lesson-title">Know your people</div><div class="lesson-desc">He memorised the names of his centurions and senior soldiers. Recognition built loyalty more effectively than pay alone.</div></div>
+      <div class="lesson-card"><div class="lesson-num">Lesson 03</div><div class="lesson-title">Clemency in victory</div><div class="lesson-desc">After defeating enemies, Caesar typically pardoned rather than executed them. Former opponents became allies.</div></div>
+      <div class="lesson-card"><div class="lesson-num">Lesson 04</div><div class="lesson-title">Move faster than expected</div><div class="lesson-desc">His campaigns were characterised by speed that bordered on recklessness — opponents found him past their defences before they could respond.</div></div>
+      <div class="lesson-card"><div class="lesson-num">Lesson 05</div><div class="lesson-title">Control the narrative</div><div class="lesson-desc">His <em>Commentarii</em> were propaganda as much as memoir — written in plain third-person to appear objective while shaping Rome's view of his wars.</div></div>
+    </div>
+
+    <h2>The Loyalty of the Legions</h2>
+    <p>Perhaps Caesar's most remarkable asset was not his tactical genius but the fierce devotion of his soldiers. The Tenth Legion, his favourite, followed him from Gaul to Greece to Africa over more than a decade of continuous campaigning. When he finally dismissed them, veterans wept.</p>
+    <p>This loyalty was cultivated deliberately. Caesar shared his soldiers' hardships — he ate their food, slept in similar conditions, and marched on foot when circumstances demanded. He paid them generously, sometimes from his own fortune. He spoke to them before battles not as a general addressing troops but as a man addressing colleagues.</p>
+
+    <div class="post-pullquote">
+      <p>"It is easier to find men who will volunteer to die than to find those who are willing to endure pain with patience."</p>
+      <cite>— Julius Caesar</cite>
+    </div>
+
+    <h2>The Art of Clemency</h2>
+    <p>Caesar's policy of <em>clementia</em> — mercy toward defeated enemies — was genuinely revolutionary. After the civil war he pardoned Cicero, Brutus, Cassius, and dozens of senators who had fought against him. He appointed many to positions of authority.</p>
+    <p>Historians debate whether this was genuine magnanimity or calculated politics. Probably both. Caesar understood that dead opponents create martyrs while pardoned ones create obligations. The policy worked — until Brutus and Cassius repaid their pardons with daggers on the Ides of March.</p>
+
+    <h2>Legacy in the Modern World</h2>
+    <p>Napoleon studied Caesar obsessively. Wellington kept the <em>Commentarii</em> in his field kit. Patton believed he was Caesar reincarnated. Modern business literature regularly invokes Caesar's principles of motivation, communication, and decisiveness. What unifies these admirers is the recognition that Caesar's greatness stemmed from an extraordinary integration of abilities — physical courage, intellectual brilliance, political cunning, and genuine charisma.</p>
+
+    <figure class="post-img">
+      <img src="gallery/roman-senate.png" alt="The Roman Senate" />
+      <figcaption>The Roman Senate · the political arena Caesar mastered</figcaption>
+    </figure>
+
+    <div class="post-divider"></div>
+    <p>Whether one admires or condemns him, Caesar remains an inexhaustible subject. Every time someone says "crossing the Rubicon" or references a ruler as a "Caesar" — in Kaiser, Tsar, or Shah — they are acknowledging a life that still refuses to stay in the past.</p>
+  </div>
+
+  <footer>
+    <div>
+      <div class="footer-logo">JULIUS CAESAR</div>
+      <p class="footer-tagline">A digital tribute to the life, campaigns, and enduring legacy of Rome's most consequential statesman.</p>
+    </div>
+    <nav class="footer-nav"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="index.html#about">About</a></li><li><a href="index.html#gallery">Gallery</a></li><li><a href="index.html#blog">Blog</a></li></ul></nav>
+    <nav class="footer-nav"><h4>Blog Posts</h4><ul><li><a href="blog-post-1.html">The Gallic Wars</a></li><li><a href="blog-post-2.html">Leadership Lessons</a></li><li><a href="blog-post-3.html">The Ides of March</a></li></ul></nav>
+  </footer>
+  <div class="footer-bottom"></div>
+
+  <script>
+    function toggleDrawer(){const o=document.getElementById('drawer').classList.toggle('open');document.getElementById('drawerOverlay').classList.toggle('open',o);document.getElementById('navToggle').classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';}
+    function closeDrawer(){['drawer','drawerOverlay','navToggle'].forEach(id=>document.getElementById(id).classList.remove('open'));document.body.style.overflow='';}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+  </script>
+</body>
+</html>

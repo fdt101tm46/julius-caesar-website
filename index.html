@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Julius Caesar — The Eternal Dictator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #FFFFFF;
+      --parchment: #F7F7F7;
+      --stone: #999999;
+      --ash: #555555;
+      --ink: #1A0A0A;
+      --gold: #B22222;
+      --gold-light: #CC2222;
+      --red: #8B0000;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --display: 'Cinzel', serif;
+      --body: 'EB Garamond', Georgia, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--body);
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    /* ── NAVBAR (SimpleHeader port) ── */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    /* ── GREEK MEANDER ORNAMENT ── */
+    .nav-meander {
+      height: 16px;
+      line-height: 0;
+      overflow: hidden;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 78px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+    .nav-logo svg { width: 20px; height: 20px; color: #B22222; flex-shrink: 0; }
+    .nav-logo-text {
+      font-family: var(--display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #B22222;
+      line-height: 1;
+    }
+    .nav-logo-text em { color: #1A0808; font-style: normal; font-weight: 400; }
+
+    /* Desktop links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--display);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #7A5252;
+      text-decoration: none;
+      padding: 0.5rem 0.85rem;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: #B22222; background: rgba(178,34,34,0.07); }
+
+    /* Hamburger toggle button */
+    .nav-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px; height: 40px;
+      background: transparent;
+      border: 1px solid rgba(178,34,34,0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      color: #B22222;
+      padding: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .nav-toggle:hover { background: rgba(201,168,76,0.1); border-color: rgba(178,34,34,0.6); }
+    .nav-toggle svg {
+      width: 22px; height: 22px;
+      overflow: visible;
+    }
+    /* Animated toggle paths */
+    .nav-toggle .toggle-path {
+      fill: none;
+      stroke: #B22222;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: all 0.6s cubic-bezier(0.4,0,0.2,1),
+                  transform 0.6s cubic-bezier(0.4,0,0.2,1);
+    }
+    .nav-toggle .toggle-top {
+      stroke-dasharray: 12 63;
+      stroke-dashoffset: 0;
+    }
+    .nav-toggle .toggle-mid { transition: opacity 0.3s; }
+    .nav-toggle svg { transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
+
+    /* Open state */
+    .nav-toggle.open svg { transform: rotate(-45deg); }
+    .nav-toggle.open .toggle-top {
+      stroke-dasharray: 20 300;
+      stroke-dashoffset: -32.42px;
+    }
+
+    /* ── DRAWER ── */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 190;
+      background: rgba(26,8,8,0.35);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .drawer {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 195;
+      width: min(75vw, 320px);
+      background: #FFFFFF;
+      border-right: 1px solid rgba(178,34,34,0.15);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .drawer.open { transform: translateX(0); }
+
+    .drawer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 1.5rem 1.25rem;
+      border-bottom: 1px solid rgba(178,34,34,0.12);
+    }
+    .drawer-brand svg { width: 16px; height: 16px; color: #B22222; }
+    .drawer-brand-text {
+      font-family: var(--display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #B22222;
+    }
+    .drawer-brand-text em { color: #1A0808; font-style: normal; font-weight: 400; }
+
+    .drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 1.5rem 1rem;
+      flex: 1;
+    }
+    .drawer-links a {
+      font-family: var(--display);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #7A5252;
+      text-decoration: none;
+      padding: 0.65rem 0.85rem;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .drawer-links a:hover,
+    .drawer-links a.active { color: #B22222; background: rgba(178,34,34,0.07); }
+
+    .drawer-footer {
+      padding: 1.25rem;
+      border-top: 1px solid rgba(178,34,34,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .drawer-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.88rem;
+      color: #7A5252;
+    }
+    .drawer-cta {
+      display: block;
+      text-align: center;
+      font-family: var(--display);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      background: #B22222;
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .drawer-cta:hover { background: #8B1010; }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 78px;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle red stripe accent */
+    #home::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 6px;
+      background: var(--gold);
+    }
+
+    #home {
+      position: relative;
+      overflow: hidden;
+    }
+    /* Left red stripe */
+    #home::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 5px;
+      background: var(--gold);
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 7rem 6rem 8rem;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--display);
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      text-transform: uppercase;
+    }
+    .hero-eyebrow::after {
+      content: '';
+      display: block;
+      flex: 1;
+      max-width: 80px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    /* Proximity letter spans */
+    .prox-letter {
+      display: inline-block;
+      will-change: color, transform, text-shadow;
+    }
+
+    .hero-title {
+      font-family: var(--display);
+      font-size: clamp(5rem, 11vw, 9rem);
+      font-weight: 700;
+      line-height: 0.95;
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-title-italic {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      color: var(--gold);
+      display: block;
+      margin-top: 0.1rem;
+      line-height: 1;
+    }
+
+    .hero-vvv {
+      font-family: var(--display);
+      font-size: clamp(1rem, 2.5vw, 1.9rem);
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #999999;
+      margin-top: 0.8rem;
+      line-height: 1;
+    }
+
+    .hero-divider {
+      width: 80px;
+      height: 2px;
+      background: var(--gold);
+      margin: 2.5rem 0;
+    }
+
+    .hero-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+      color: var(--ash);
+      padding-left: 1.4rem;
+      border-left: 3px solid var(--gold);
+      margin-bottom: 3rem;
+      line-height: 1.6;
+      max-width: 600px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 4rem;
+      margin-top: 0;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(178,34,34,0.15);
+      max-width: 600px;
+    }
+
+    .stat { display: flex; flex-direction: column; }
+    .stat-num {
+      font-family: var(--display);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      color: var(--gold);
+      font-weight: 700;
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--display);
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      color: var(--ash);
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 7rem 4rem; }
+
+    .section-label {
+      font-family: var(--display);
+      font-size: 0.62rem;
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+
+    .divider {
+      width: 60px; height: 1px;
+      background: var(--gold);
+      margin: 1.5rem 0 2.5rem;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: #fff; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .about-img-col { position: relative; }
+
+    .about-img-frame {
+      position: relative;
+    }
+    .about-img-frame::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: -12px;
+      right: 12px; bottom: 12px;
+      border: 1px solid var(--stone);
+      z-index: 0;
+    }
+
+    .about-img-frame img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      filter: sepia(15%) contrast(1.08);
+    }
+
+    .about-tag {
+      position: absolute;
+      bottom: -1.5rem; right: -1.5rem;
+      z-index: 2;
+      background: var(--ink);
+      color: var(--cream);
+      padding: 1rem 1.4rem;
+      font-family: var(--display);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      line-height: 1.8;
+    }
+
+    .about-text p {
+      color: #4a4540;
+      font-size: 1.05rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .about-facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--stone);
+    }
+
+    .fact-item { display: flex; flex-direction: column; }
+    .fact-label {
+      font-family: var(--display);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+    .fact-value {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    /* ── GALLERY ── */
+    #gallery { background: var(--cream); }
+
+    .gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      max-width: 1100px;
+      margin: 0 auto 3rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .gallery-card {
+      background: #fff;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gallery-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(42,37,32,0.1);
+    }
+    .gallery-card:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .gallery-card-img {
+      width: 100%;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .gallery-card:first-child .gallery-card-img { aspect-ratio: 1; }
+
+    .gallery-card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: sepia(10%) contrast(1.05);
+      transition: transform 0.5s ease;
+    }
+    .gallery-card:hover .gallery-card-img img { transform: scale(1.04); }
+
+    .gallery-card-info {
+      padding: 1rem 1.2rem;
+      border-top: 1px solid #EEEEEE;
+    }
+    .gallery-card-title {
+      font-family: var(--display);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .gallery-card-meta {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.82rem;
+      color: var(--ash);
+    }
+
+    /* ── BLOG ── */
+    #blog { background: #fff; }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .blog-card {
+      display: flex;
+      flex-direction: column;
+      border-top: 2px solid var(--ink);
+      padding-top: 1.5rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .blog-card:hover { border-color: var(--gold); }
+
+    .blog-tag {
+      font-family: var(--display);
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+
+    .blog-title {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+
+    .blog-excerpt {
+      font-size: 0.95rem;
+      color: var(--ash);
+      flex: 1;
+      line-height: 1.6;
+    }
+
+    .blog-read {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--display);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--ink);
+      margin-top: 1.5rem;
+      text-decoration: none;
+      border-bottom: 1px solid var(--stone);
+      padding-bottom: 0.2rem;
+      transition: border-color 0.2s, color 0.2s;
+      width: fit-content;
+    }
+    .blog-read:hover { color: var(--gold); border-color: var(--gold); }
+    .blog-read::after { content: '→'; }
+
+    /* ── SOCIAL ── */
+    #social { background: #FFFFFF; border-top: 1px solid rgba(178,34,34,0.12); }
+
+    .social-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 4rem;
+    }
+    .social-header .divider { margin: 1.5rem auto 2.5rem; }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .social-card {
+      background: #fff;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+      transition: box-shadow 0.3s, transform 0.3s;
+      text-decoration: none;
+    }
+    .social-card:hover {
+      box-shadow: 0 8px 28px rgba(178,34,34,0.1);
+      transform: translateY(-3px);
+    }
+
+    .social-platform {
+      font-family: var(--display);
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+    }
+
+    .social-handle {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .social-desc {
+      font-size: 0.88rem;
+      color: var(--ash);
+      line-height: 1.6;
+    }
+
+    .social-arrow {
+      margin-top: auto;
+      font-family: var(--display);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--ink);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #7A0A0A;
+      color: #FFF5F5;
+      padding: 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: var(--display);
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: var(--cream);
+    }
+
+    .footer-tagline {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--stone);
+      line-height: 1.5;
+    }
+
+    .footer-nav h4 {
+      font-family: var(--display);
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-nav ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-nav a {
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      color: var(--stone);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-nav a:hover { color: var(--cream); }
+
+    .footer-bottom {
+      background: #600808;
+      border-top: 1px solid rgba(255,180,180,0.15);
+      padding: 1.2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-bottom p {
+      font-family: var(--display);
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,210,210,0.6);
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,8,8,0.75);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--cream);
+      max-width: 700px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      filter: sepia(15%);
+    }
+
+    .modal-body { padding: 2rem 2.5rem; }
+    .modal-title {
+      font-family: var(--display);
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+    .modal-meta {
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--ash);
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+    }
+    .modal-desc { color: #4a4540; font-size: 1rem; line-height: 1.7; }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      width: 36px; height: 36px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    /* ── FEATURED WORKS ── */
+    .fw-section {
+      display: flex;
+      background: #FFFFFF;
+      border-top: 1px solid rgba(178,34,34,0.12);
+      padding: 0;
+    }
+
+    /* Sticky left panel */
+    .fw-panel {
+      display: none; /* hidden on mobile, shown on desktop */
+      width: 50%;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 4rem 0 4.5rem;
+      background: #8B0000;
+      pointer-events: none;
+    }
+
+    .fw-label {
+      font-family: var(--display);
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 2rem;
+    }
+
+    .fw-title {
+      font-family: var(--display);
+      font-size: clamp(1.4rem, 2vw, 1.9rem);
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .fw-artist {
+      font-family: var(--display);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 0.25rem;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .fw-year {
+      font-family: var(--display);
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.5rem;
+      transition: opacity 0.3s ease;
+    }
+
+    .fw-rule {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,0.35);
+      margin-bottom: 1.5rem;
+    }
+
+    .fw-desc {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.72);
+      max-width: 360px;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    /* Swap animation classes */
+    .fw-title.fw-out,
+    .fw-artist.fw-out,
+    .fw-desc.fw-out  { opacity: 0; transform: translateY(-10px); }
+    .fw-year.fw-out  { opacity: 0; }
+    .fw-title.fw-in,
+    .fw-artist.fw-in,
+    .fw-desc.fw-in   { opacity: 0; transform: translateY(10px); }
+    .fw-year.fw-in   { opacity: 0; }
+
+    /* Progress */
+    .fw-progress {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 2.5rem;
+    }
+
+    .fw-dot {
+      display: block;
+      height: 1px;
+      width: 6px;
+      background: rgba(255,255,255,0.25);
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+    .fw-dot--active {
+      width: 24px;
+      background: #FFFFFF;
+    }
+
+    .fw-counter {
+      font-family: var(--display);
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.35);
+      margin-top: 0.6rem;
+    }
+    .fw-counter span { color: rgba(255,255,255,0.7); }
+
+    /* Right scrolling column */
+    .fw-scroll {
+      width: 100%;
+    }
+
+    .fw-item {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 2rem;
+    }
+
+    .fw-frame {
+      position: relative;
+    }
+
+    .fw-frame img {
+      display: block;
+      max-width: min(88vw, 520px);
+      max-height: 62vh;
+      width: auto;
+      height: auto;
+      filter: sepia(15%) contrast(1.05);
+    }
+
+    .fw-frame-border {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(178,34,34,0.2);
+      transition: border-color 0.4s ease;
+      pointer-events: none;
+    }
+    .fw-item.fw-active .fw-frame-border { border-color: rgba(178,34,34,0.7); }
+
+    /* Mobile caption (shown only on mobile) */
+    .fw-mobile-caption {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(13,12,10,0.82);
+      backdrop-filter: blur(6px);
+      padding: 0.7rem 1rem;
+    }
+    .fw-mobile-caption strong {
+      font-family: var(--display);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: var(--cream);
+    }
+    .fw-mobile-caption span {
+      font-family: var(--display);
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    @media (min-width: 768px) {
+      .fw-panel  { display: flex; }
+      .fw-scroll { width: 50%; }
+      .fw-frame img {
+        max-width: min(44vw, 520px);
+        max-height: 70vh;
+      }
+      .fw-mobile-caption { display: none; }
+    }
+
+    @media (min-width: 1100px) {
+      .fw-frame img {
+        max-width: min(40vw, 580px);
+        max-height: 72vh;
+      }
+      .fw-panel { padding: 0 3.5rem 0 5rem; }
+    }
+
+    /* ── PORTRAIT SPLIT (inline — lives inside .about-img-frame) ── */
+    .ps-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    .ps-panel {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .ps-panel img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .ps-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.28) 100%);
+      pointer-events: none;
+    }
+
+    .ps-left  { z-index: 2; }
+    .ps-right { z-index: 1; }
+
+    /* Portrait captions row — sits below the frame */
+    .ps-captions {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 1.1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid #EEEEEE;
+    }
+    .ps-cap-left,
+    .ps-cap-right {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .ps-cap-right { text-align: right; }
+    .ps-cap-title {
+      font-family: var(--display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+    }
+    .ps-cap-sub {
+      font-family: var(--display);
+      font-size: 0.52rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--stone);
+    }
+
+    .ps-svg {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      width: 100%; height: 100%;
+    }
+    .ps-hint {
+      position: absolute;
+      bottom: 0.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+      font-family: var(--display);
+      font-size: 0.42rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.3rem 0.8rem;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .hero-left { padding: 4rem 2rem 4rem 3rem; }
+      section { padding: 5rem 2rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-card:first-child { grid-column: span 2; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .social-grid { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr; padding: 3rem 2rem; }
+      .footer-bottom { padding: 1rem 2rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- DRAWER OVERLAY -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+
+  <!-- DRAWER -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/>
+      </svg>
+      <span class="drawer-brand-text">Caesar <em>· SPQR</em></span>
+    </div>
+    <nav class="drawer-links">
+      <a href="#home" onclick="closeDrawer()">Home</a>
+      <a href="#about" onclick="closeDrawer()">About</a>
+      <a href="#gallery" onclick="closeDrawer()">Gallery</a>
+      <a href="#blog" onclick="closeDrawer()">Blog</a>
+    </nav>
+    <div class="drawer-footer">
+      <span class="drawer-quote">"Veni, vidi, vici."</span>
+      <a href="#blog" class="drawer-cta" onclick="closeDrawer()">Read the Blog</a>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <nav class="site-nav">
+
+      <!-- Logo -->
+      <a href="#home" class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/>
+        </svg>
+        <span class="nav-logo-text">Caesar <em>· SPQR</em></span>
+      </a>
+
+      <!-- Desktop links -->
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#blog">Blog</a></li>
+      </ul>
+
+      <!-- Mobile toggle -->
+      <button class="nav-toggle" id="navToggle" onclick="toggleDrawer()" aria-label="Open menu">
+        <svg viewBox="0 0 32 32">
+          <path class="toggle-path toggle-top"
+            d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"/>
+          <path class="toggle-path toggle-mid" d="M7 16 27 16"/>
+        </svg>
+      </button>
+
+    </nav>
+
+    <!-- Greek meander ornament strip -->
+    <div class="nav-meander" aria-hidden="true">
+      <svg width="100%" height="16" style="display:block" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="gk" x="0" y="0" width="32" height="16" patternUnits="userSpaceOnUse">
+            <rect width="32" height="16" fill="#6B0808"/>
+            <polyline points="0,8 8,8 8,2 24,2 24,14 16,14 16,8 32,8"
+              fill="none" stroke="white" stroke-width="2"
+              stroke-linejoin="miter" stroke-linecap="square"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="16" fill="url(#gk)"/>
+      </svg>
+    </div>
+
+  </header>
+
+  <!-- HERO -->
+  <section id="home">
+    <div class="hero-left fade-in" id="heroContainer">
+      <h1 class="hero-title"><!-- JULIUS -->
+        <span class="prox-letter" data-from="#1A0A0A" data-to="#B22222" data-radius="220">J</span><span class="prox-letter" data-from="#1A0A0A" data-to="#B22222" data-radius="220">u</span><span class="prox-letter" data-from="#1A0A0A" data-to="#B22222" data-radius="220">l</span><span class="prox-letter" data-from="#1A0A0A" data-to="#B22222" data-radius="220">i</span><span class="prox-letter" data-from="#1A0A0A" data-to="#B22222" data-radius="220">u</span><span class="prox-letter" data-from="#1A0A0A" data-to="#B22222" data-radius="220">s</span>
+        <!-- CAESAR -->
+        <span class="hero-title-italic"><span class="prox-letter" data-from="#B22222" data-to="#1A0A0A" data-radius="220">C</span><span class="prox-letter" data-from="#B22222" data-to="#1A0A0A" data-radius="220">a</span><span class="prox-letter" data-from="#B22222" data-to="#1A0A0A" data-radius="220">e</span><span class="prox-letter" data-from="#B22222" data-to="#1A0A0A" data-radius="220">s</span><span class="prox-letter" data-from="#B22222" data-to="#1A0A0A" data-radius="220">a</span><span class="prox-letter" data-from="#B22222" data-to="#1A0A0A" data-radius="220">r</span></span>
+      </h1>
+
+      <!-- VENI VIDI VICI -->
+      <p class="hero-vvv"><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">V</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">e</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">n</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">i</span><span style="display:inline-block;width:0.5em"></span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">V</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">i</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">d</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">i</span><span style="display:inline-block;width:0.5em"></span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">V</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">i</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">c</span><span class="prox-letter" data-from="#999999" data-to="#B22222" data-radius="160">i</span></p>
+
+      <div class="hero-divider"></div>
+      <blockquote class="hero-quote">
+        "Veni, vidi, vici." &mdash; I came. I saw. I conquered.<br/>
+        <small style="font-size:0.88rem; letter-spacing:0.08em; font-style:normal;">Roman General · Dictator Perpetuo · Reformer of Rome</small>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-grid fade-in">
+      <div class="about-img-col">
+        <div class="about-img-frame">
+
+          <!-- Inline portrait lightning split -->
+          <div class="ps-wrap" id="psWrap">
+
+            <!-- Right portrait — base layer -->
+            <div class="ps-panel ps-right">
+              <img src="gallery/portrait-vatican.jpg" alt="Vatican Museums Portrait" />
+            </div>
+
+            <!-- Left portrait — clipped -->
+            <div class="ps-panel ps-left" id="psLeft">
+              <img src="gallery/portrait-tusculum.jpg" alt="Tusculum Portrait" />
+            </div>
+
+            <!-- SVG electric arc -->
+            <svg class="ps-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <defs>
+                <filter id="ps-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="0.9" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <polyline id="psArcOuter" fill="none" stroke="rgba(178,34,34,0.6)"    stroke-width="3"   vector-effect="non-scaling-stroke" filter="url(#ps-glow)"/>
+              <polyline id="psArcMid"   fill="none" stroke="rgba(220,80,80,0.55)"  stroke-width="2.2" vector-effect="non-scaling-stroke" filter="url(#ps-glow)"/>
+              <polyline id="psArcCore"  fill="none" stroke="rgba(255,200,200,0.95)" stroke-width="1.2" vector-effect="non-scaling-stroke" stroke-opacity="0.95"/>
+            </svg>
+
+          </div>
+          <!-- end ps-wrap -->
+
+          <div class="about-tag">
+            GENERAL<br/>STATESMAN<br/>DICTATOR
+          </div>
+        </div>
+
+        <!-- Portrait captions — outside the frame -->
+        <div class="ps-captions">
+          <div class="ps-cap-left">
+            <span class="ps-cap-title">Historical</span>
+            <span class="ps-cap-sub">Tusculum · c. 50 BC</span>
+          </div>
+          <div class="ps-cap-right">
+            <span class="ps-cap-title">Romanticised</span>
+            <span class="ps-cap-sub">Vatican · c. 44 BC</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="about-text">
+        <div class="section-label">Biography</div>
+        <h2 class="section-title">The Man Who<br/>Shaped an Empire</h2>
+        <div class="divider"></div>
+        <p>Gaius Julius Caesar was born on 12 July 100 BC into a patrician family of Rome. Though his family claimed divine descent from Venus through Aeneas, Caesar grew up in the <em>Subura</em> — one of Rome's rougher neighbourhoods — grounding him in the realities of ordinary Roman life.</p>
+        <p>His career was defined by ambition, military genius, and political cunning. After serving as a general in the Gallic Wars from 58 to 50 BC, he returned to Rome in defiance of the Senate, crossing the Rubicon with his army in 49 BC — a moment that triggered civil war and forever changed the Republic.</p>
+        <p>He was appointed Dictator perpetuo — dictator in perpetuity — in early 44 BC. On the <em>Ides of March</em>, 15 March 44 BC, he was assassinated by a group of senators, led by Brutus and Cassius, who feared the end of the Republic.</p>
+        <a href="#blog" class="blog-read" style="margin-top:2rem;">Read Full Biography</a>
+        <div class="about-facts">
+          <div class="fact-item"><span class="fact-label">Born</span><span class="fact-value">12 July 100 BC, Rome</span></div>
+          <div class="fact-item"><span class="fact-label">Died</span><span class="fact-value">15 March 44 BC (Age 55)</span></div>
+          <div class="fact-item"><span class="fact-label">Spouse</span><span class="fact-value">Calpurnia Pisonis</span></div>
+          <div class="fact-item"><span class="fact-label">Title</span><span class="fact-value">Dictator Perpetuo</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED WORKS (scroll-driven) -->
+  <section id="gallery" class="fw-section">
+
+    <!-- Sticky info panel -->
+    <div class="fw-panel" id="fwPanel">
+      <p class="fw-label">Visual Archive</p>
+      <h2 class="fw-title" id="fwTitle">Caesar's Bridge over the Rhine</h2>
+      <p class="fw-artist" id="fwArtist">John Soane Museum Collection</p>
+      <p class="fw-year"  id="fwYear">55 BC · Historical Reconstruction</p>
+      <div class="fw-rule"></div>
+      <p class="fw-desc"  id="fwDesc">In just ten days, Caesar's engineers threw a timber bridge across the Rhine — a feat of military engineering designed as much to awe the Germanic tribes as to cross the river. He crossed, demonstrated Roman power, then dismantled it entirely upon his return.</p>
+      <div class="fw-progress" id="fwProgress">
+        <span class="fw-dot fw-dot--active"></span>
+        <span class="fw-dot"></span>
+        <span class="fw-dot"></span>
+        <span class="fw-dot"></span>
+        <span class="fw-dot"></span>
+        <span class="fw-dot"></span>
+      </div>
+      <p class="fw-counter"><span id="fwCurrent">01</span> / 06</p>
+    </div>
+
+    <!-- Scrolling artworks — ordered chronologically by depicted event -->
+    <div class="fw-scroll">
+
+      <!-- 55 BC -->
+      <div class="fw-item" data-index="0"
+        data-title="Caesar's Bridge over the Rhine"
+        data-artist="John Soane Museum Collection"
+        data-year="55 BC · Historical Reconstruction"
+        data-desc="In just ten days, Caesar's engineers threw a timber bridge across the Rhine — a feat of military engineering designed as much to awe the Germanic tribes as to cross the river. He crossed, demonstrated Roman power, then dismantled it entirely upon his return.">
+        <div class="fw-frame">
+          <img src="gallery/rhine-bridge.jpg" alt="Caesar's Bridge over the Rhine" />
+          <div class="fw-frame-border"></div>
+          <div class="fw-mobile-caption">
+            <strong>Caesar's Bridge over the Rhine</strong>
+            <span>55 BC · Historical Reconstruction</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 52 BC -->
+      <div class="fw-item" data-index="1"
+        data-title="The Siege of Alesia"
+        data-artist="Historical Reconstruction"
+        data-year="52 BC"
+        data-desc="At Alesia, Caesar constructed two simultaneous walls totalling over 35 kilometres — one to contain Vercingetorix within, another facing outward against a Gallic relief force of 250,000. He crushed both enemies at once in Rome's greatest tactical feat.">
+        <div class="fw-frame">
+          <img src="gallery/siege-alesia.png" alt="Siege of Alesia" />
+          <div class="fw-frame-border"></div>
+          <div class="fw-mobile-caption">
+            <strong>The Siege of Alesia</strong>
+            <span>Historical Reconstruction · 52 BC</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 52 BC -->
+      <div class="fw-item" data-index="2"
+        data-title="Surrender at Alesia"
+        data-artist="Lionel Royer"
+        data-year="1899 · Oil on canvas"
+        data-desc="Royer's monumental canvas depicts Vercingetorix, chieftain of the Arverni tribe, throwing down his weapons before Caesar at the surrender of Alesia in 52 BC — the climactic moment that ended the Gallic Wars and sealed Caesar's dominance over all of Gaul.">
+        <div class="fw-frame">
+          <img src="gallery/vercingetorix.jpg" alt="Surrender at Alesia" />
+          <div class="fw-frame-border"></div>
+          <div class="fw-mobile-caption">
+            <strong>Surrender at Alesia</strong>
+            <span>Lionel Royer · 1899</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 44 BC -->
+      <div class="fw-item" data-index="3"
+        data-title="Aureus of Caesar"
+        data-artist="Roman State Mint"
+        data-year="44 BC · Gold"
+        data-desc="Struck in the final weeks of his life, this gold coin was among the first in Roman history to bear the portrait of a living person. It was a monarchical statement that alarmed the Senate — and helped accelerate the conspiracy that would kill him.">
+        <div class="fw-frame">
+          <img src="gallery/denarius.png" alt="Aureus of Caesar" />
+          <div class="fw-frame-border"></div>
+          <div class="fw-mobile-caption">
+            <strong>Aureus of Caesar</strong>
+            <span>Roman State Mint · 44 BC</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 44 BC -->
+      <div class="fw-item" data-index="4"
+        data-title="The Death of Caesar"
+        data-artist="Jean-Léon Gérôme"
+        data-year="1867 · Oil on canvas"
+        data-desc="Gérôme's dramatic composition shows the Senate floor moments after Caesar fell. While the conspirators flee clutching bloodied daggers, his body lies alone in silence — a dictator without heirs, a republic without a future.">
+        <div class="fw-frame">
+          <img src="gallery/ides-of-march.jpg" alt="The Death of Caesar" />
+          <div class="fw-frame-border"></div>
+          <div class="fw-mobile-caption">
+            <strong>The Death of Caesar</strong>
+            <span>Jean-Léon Gérôme · 1867</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 42 BC -->
+      <div class="fw-item" data-index="5"
+        data-title="Brutus and the Ghost of Caesar"
+        data-artist="Edward von Steinle"
+        data-year="1849 · Oil on canvas"
+        data-desc="On the eve of Philippi, Caesar's ghost appears to Brutus in his tent — a moment immortalised by Shakespeare and painted here with spectral dread. The apparition whispers 'thou shalt see me at Philippi', sealing the conspirator's fate before a single sword is drawn.">
+        <div class="fw-frame">
+          <img src="gallery/brutus-ghost.jpg" alt="Brutus and the Ghost of Caesar" />
+          <div class="fw-frame-border"></div>
+          <div class="fw-mobile-caption">
+            <strong>Brutus and the Ghost of Caesar</strong>
+            <span>Edward von Steinle · 1849</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section id="blog">
+    <div style="max-width:1100px; margin:0 auto;">
+      <div class="section-label fade-in">Latest Writing</div>
+      <h2 class="section-title fade-in">From the Blog</h2>
+      <div class="divider fade-in"></div>
+
+      <div class="blog-grid fade-in">
+
+        <article class="blog-card">
+          <div class="blog-tag">Military Strategy</div>
+          <h3 class="blog-title">Why Caesar's Gallic Wars Changed Europe Forever</h3>
+          <p class="blog-excerpt">From the siege of Alesia to the battle of Zela, Caesar's campaigns redefined Roman warfare. His use of fortification, speed, and psychological pressure set a blueprint studied by commanders for centuries — including Napoleon.</p>
+          <a href="blog-post-1.html" class="blog-read">Read More</a>
+        </article>
+
+        <article class="blog-card">
+          <div class="blog-tag">Leadership &amp; Legacy</div>
+          <h3 class="blog-title">Leadership Lessons from Julius Caesar</h3>
+          <p class="blog-excerpt">Caesar led from the front, shared his soldiers' hardships, and mastered the art of clemency in victory. Two thousand years on, his leadership philosophy still resonates in boardrooms, academies, and war colleges worldwide.</p>
+          <a href="blog-post-2.html" class="blog-read">Read More</a>
+        </article>
+
+        <article class="blog-card">
+          <div class="blog-tag">The Ides of March</div>
+          <h3 class="blog-title">Et Tu, Brute? — What Really Happened on the Ides of March</h3>
+          <p class="blog-excerpt">Sixty senators were in on the plot. Yet Caesar reportedly received a written warning that morning and chose to ignore it. Was it arrogance, or fatalism? Historians still debate what Caesar knew — and whether he cared to survive.</p>
+          <a href="blog-post-3.html" class="blog-read">Read More</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <section id="social">
+    <div class="social-header fade-in">
+      <div class="section-label">Follow the Legacy</div>
+      <h2 class="section-title">Caesar Across Platforms</h2>
+      <div class="divider"></div>
+      <p style="font-family:var(--serif); color:var(--ash); font-size:1rem;">Explore Caesar's life, battles, and legacy across every corner of the internet.</p>
+    </div>
+
+    <div class="social-grid fade-in">
+      <a href="https://www.instagram.com/" target="_blank" class="social-card">
+        <div class="social-platform">Instagram</div>
+        <div class="social-handle">@julius.caesar.legacy</div>
+        <div class="social-desc">Coins, busts, battle maps and artistic depictions of Caesar's world — curated daily from museum collections around the globe.</div>
+        <div class="social-arrow">Follow →</div>
+      </a>
+
+      <a href="https://www.youtube.com/" target="_blank" class="social-card">
+        <div class="social-platform">YouTube</div>
+        <div class="social-handle">Caesar — The Digital Archive</div>
+        <div class="social-desc">Documentary deep-dives into the Gallic Wars, Roman politics, and the cultural impact of Caesar's assassination on Western civilisation.</div>
+        <div class="social-arrow">Subscribe →</div>
+      </a>
+
+      <a href="https://twitter.com/" target="_blank" class="social-card">
+        <div class="social-platform">X / Twitter</div>
+        <div class="social-handle">@caesararchive</div>
+        <div class="social-desc">Daily quotes, historical facts, and threads on how Caesar's decisions continue to shape law, language, and leadership today.</div>
+        <div class="social-arrow">Follow →</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <div class="footer-logo">JULIUS CAESAR</div>
+      <p class="footer-tagline">A digital tribute to the life, campaigns, and enduring legacy of Rome's most consequential statesman.</p>
+    </div>
+
+    <nav class="footer-nav">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#blog">Blog</a></li>
+      </ul>
+    </nav>
+
+    <nav class="footer-nav">
+      <h4>Blog Posts</h4>
+      <ul>
+        <li><a href="blog-post-1.html">The Gallic Wars</a></li>
+        <li><a href="blog-post-2.html">Leadership Lessons</a></li>
+        <li><a href="blog-post-3.html">The Ides of March</a></li>
+      </ul>
+    </nav>
+  </footer>
+  <div class="footer-bottom"></div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+      <img class="modal-img" id="modal-img" src="" alt="" />
+      <div class="modal-body">
+        <h3 class="modal-title" id="modal-title"></h3>
+        <p class="modal-meta" id="modal-meta"></p>
+        <p class="modal-desc" id="modal-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Drawer / SimpleHeader ──────────────────────────────────
+    function toggleDrawer() {
+      const open = document.getElementById('drawer').classList.toggle('open');
+      document.getElementById('drawerOverlay').classList.toggle('open', open);
+      document.getElementById('navToggle').classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('drawerOverlay').classList.remove('open');
+      document.getElementById('navToggle').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    // Close on Escape
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+    // Active link highlight
+    const navAs = document.querySelectorAll('.nav-links a, .drawer-links a');
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.id;
+      });
+      navAs.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    }, { passive: true });
+
+    // ── Featured Works — scroll-driven panel ─────────────────
+    (function () {
+      const items   = document.querySelectorAll('.fw-item');
+      const dots    = document.querySelectorAll('.fw-dot');
+      const elTitle  = document.getElementById('fwTitle');
+      const elArtist = document.getElementById('fwArtist');
+      const elYear   = document.getElementById('fwYear');
+      const elDesc   = document.getElementById('fwDesc');
+      const elCurrent = document.getElementById('fwCurrent');
+
+      let current = -1;
+
+      function swapPanel(item) {
+        const idx    = +item.dataset.index;
+        if (idx === current) return;
+        current = idx;
+
+        // Update active dot
+        dots.forEach((d, i) => d.classList.toggle('fw-dot--active', i === idx));
+        elCurrent.textContent = String(idx + 1).padStart(2, '0');
+
+        // Animate out
+        [elTitle, elArtist, elDesc].forEach(el => {
+          el.classList.remove('fw-in');
+          el.classList.add('fw-out');
+        });
+        elYear.classList.add('fw-out');
+
+        setTimeout(() => {
+          // Swap text
+          elTitle.textContent  = item.dataset.title;
+          elArtist.textContent = item.dataset.artist;
+          elYear.textContent   = item.dataset.year;
+          elDesc.textContent   = item.dataset.desc;
+
+          // Animate in
+          [elTitle, elArtist, elDesc].forEach(el => {
+            el.classList.remove('fw-out');
+            el.classList.add('fw-in');
+          });
+          elYear.classList.remove('fw-out');
+          elYear.classList.add('fw-in');
+
+          // Remove in-class after transition completes
+          setTimeout(() => {
+            [elTitle, elArtist, elDesc, elYear].forEach(el => el.classList.remove('fw-in'));
+          }, 450);
+        }, 300);
+
+        // Active border on image
+        items.forEach(it => it.classList.remove('fw-active'));
+        item.classList.add('fw-active');
+      }
+
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) swapPanel(e.target);
+        });
+      }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+
+      items.forEach(item => io.observe(item));
+
+      // Trigger first item immediately
+      if (items.length) swapPanel(items[0]);
+    })();
+
+    // ── Fade-in on scroll ─────────────────────────────────────
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Modal
+    function openModal(title, meta, desc, img) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-meta').textContent = meta;
+      document.getElementById('modal-desc').textContent = desc;
+      document.getElementById('modal-img').src = img;
+      document.getElementById('modal-img').alt = title;
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(e) {
+      if (e.target === document.getElementById('modal')) closeModalDirect();
+    }
+    function closeModalDirect() {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+    // ── Portrait Lightning Split ──────────────────────────────
+    (function () {
+      const section   = document.getElementById('psWrap');
+      const leftPanel = document.getElementById('psLeft');
+      const arcOuter  = document.getElementById('psArcOuter');
+      const arcMid    = document.getElementById('psArcMid');
+      const arcCore   = document.getElementById('psArcCore');
+      if (!section || !leftPanel || !arcOuter || !arcMid || !arcCore) return;
+
+      // ── Config (mirrors React ELECTRIC_CONFIG) ────────────────
+      const CFG = {
+        segments:    48,
+        amps:        [0.4, -0.8, 0.6],
+        freqs:       [0.7, 2.7, 3.9],
+        speeds:      [-1.32, 0.42, 0.95],
+        shimmer:     { speed: 4.2, freq: 8.5, amp: 0.25 },
+        clipOffset:  25,
+        stiffness:   6,
+        timeClamp:   0.05,
+      };
+
+      // ── State ─────────────────────────────────────────────────
+      let targetPos  = 60;   // where we want the split (%)
+      let displayPos = 60;   // smoothed split position
+      let time       = 0;
+      let lastNow    = performance.now();
+
+      // ── Mouse tracking ────────────────────────────────────────
+      section.addEventListener('mousemove', e => {
+        const r = section.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width) * 100;
+        targetPos = x < 50 ? 110 : 20;
+      });
+      section.addEventListener('mouseleave', () => { targetPos = 60; });
+
+      // ── Wave geometry ─────────────────────────────────────────
+      function clamp(v) { return Math.max(0, Math.min(100, v)); }
+
+      function buildWave() {
+        const topX    = clamp(displayPos);
+        const bottomX = clamp(displayPos - CFG.clipOffset);
+        const pts = [];
+        for (let i = 0; i <= CFG.segments; i++) {
+          const tN   = i / CFG.segments;
+          const base = topX * (1 - tN) + bottomX * tN;
+          let off = 0;
+          for (let k = 0; k < CFG.amps.length; k++) {
+            off += CFG.amps[k] * Math.sin(2 * Math.PI * (CFG.freqs[k] * tN + CFG.speeds[k] * time) + k * 1.3);
+          }
+          off += CFG.shimmer.amp * Math.sin(2 * Math.PI * (CFG.shimmer.freq * tN + CFG.shimmer.speed * time));
+          pts.push({ x: clamp(base + off), y: tN * 100 });
+        }
+        return pts;
+      }
+
+      // ── Main tick ─────────────────────────────────────────────
+      function tick(now) {
+        requestAnimationFrame(tick);
+
+        const dt = Math.min(CFG.timeClamp, (now - lastNow) / 1000);
+        lastNow = now;
+        time += dt;
+
+        // Ease displayPos toward targetPos (critically-damped spring feel)
+        displayPos += (targetPos - displayPos) * (1 - Math.exp(-CFG.stiffness * dt));
+
+        // Build wave points
+        const pts       = buildWave();
+        const polyStr   = pts.map(p => `${p.x},${p.y}`).join(' ');
+        const clipEdge  = pts.map(p => `${p.x}% ${p.y}%`).join(', ');
+        const clipPoly  = `polygon(0% 0%, ${clipEdge}, 0% 100%)`;
+
+        // Update clip-path on left panel
+        leftPanel.style.clipPath         = clipPoly;
+        leftPanel.style.webkitClipPath   = clipPoly;
+
+        // Update SVG arc polylines
+        arcOuter.setAttribute('points', polyStr);
+        arcMid.setAttribute('points', polyStr);
+        arcCore.setAttribute('points', polyStr);
+
+      }
+
+      requestAnimationFrame(tick);
+    })();
+
+    // ── Cursor Proximity Effect ───────────────────────────────
+    (function () {
+      // ── Colour helpers ──────────────────────────────────────
+      function hexToRgb(hex) {
+        const h = hex.replace('#', '');
+        return [
+          parseInt(h.slice(0, 2), 16),
+          parseInt(h.slice(2, 4), 16),
+          parseInt(h.slice(4, 6), 16),
+        ];
+      }
+      function lerpColor(fromHex, toHex, t) {
+        const [r1, g1, b1] = hexToRgb(fromHex);
+        const [r2, g2, b2] = hexToRgb(toHex);
+        const r = Math.round(r1 + (r2 - r1) * t);
+        const g = Math.round(g1 + (g2 - g1) * t);
+        const b = Math.round(b1 + (b2 - b1) * t);
+        return `rgb(${r},${g},${b})`;
+      }
+      // Gaussian falloff
+      function gaussian(d, radius) {
+        return Math.exp(-Math.pow(d / (radius / 2), 2) / 2);
+      }
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      // ── State ────────────────────────────────────────────────
+      const letters = Array.from(document.querySelectorAll('.prox-letter'));
+      if (!letters.length) return;
+
+      const smoothed = new Float32Array(letters.length);
+      let mouseX = -9999, mouseY = -9999;
+
+      // ── Mouse / touch tracking ───────────────────────────────
+      document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+      document.addEventListener('touchmove', e => {
+        mouseX = e.touches[0].clientX;
+        mouseY = e.touches[0].clientY;
+      }, { passive: true });
+      document.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+
+      // ── Animation loop ───────────────────────────────────────
+      function tick() {
+        requestAnimationFrame(tick);
+
+        letters.forEach((el, i) => {
+          const r      = el.getBoundingClientRect();
+          const cx     = r.left + r.width  / 2;
+          const cy     = r.top  + r.height / 2;
+          const d      = Math.hypot(mouseX - cx, mouseY - cy);
+          const radius = parseFloat(el.dataset.radius) || 200;
+          const target = gaussian(d, radius);
+
+          // 0.18 lerp speed — snappier approach, smooth retreat
+          smoothed[i] = lerp(smoothed[i], target, 0.18);
+          const t = smoothed[i];
+
+          if (t < 0.004) {
+            el.style.color      = '';
+            el.style.transform  = '';
+            el.style.textShadow = '';
+            return;
+          }
+
+          // Colour: full swap between from/to
+          el.style.color = lerpColor(el.dataset.from, el.dataset.to, t);
+
+          // Scale: up to 1.18× — clearly visible
+          el.style.transform = `scale(${1 + 0.18 * t})`;
+
+          // Glow: red shadow that builds with proximity
+          const glow = Math.round(t * 18);
+          const alpha = (t * 0.75).toFixed(2);
+          el.style.textShadow = `0 0 ${glow}px rgba(178,34,34,${alpha})`;
+        });
+      }
+
+      tick();
+    })();
+  </script>
+</body>
+</html>
