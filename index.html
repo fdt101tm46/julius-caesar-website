@@ -1114,7 +1114,57 @@
       footer { grid-template-columns: 1fr; padding: 3rem 2rem; }
       .footer-bottom { padding: 1rem 2rem; flex-direction: column; gap: 0.5rem; }
     }
+
+    /* ── THEME TOGGLE BUTTON ── */
+    .theme-toggle { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: transparent; border: 1px solid rgba(178,34,34,0.3); border-radius: 6px; cursor: pointer; color: #B22222; padding: 0; transition: background 0.2s, border-color 0.2s; margin-right: 0.5rem; flex-shrink: 0; }
+    .theme-toggle:hover { background: rgba(178,34,34,0.07); border-color: rgba(178,34,34,0.5); }
+    .theme-toggle svg { width: 16px; height: 16px; display: block; }
+    .theme-toggle .icon-moon { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+
+    /* ── DARK MODE ── */
+    [data-theme="dark"] body { background: #0D0808; color: #E8D5C4; }
+    [data-theme="dark"] .site-header { background: rgba(13,8,8,0.97); }
+    [data-theme="dark"] .nav-logo-text { color: #B22222; }
+    [data-theme="dark"] .nav-logo-text em { color: #E8D5C4; }
+    [data-theme="dark"] .nav-links a { color: #A08080; }
+    [data-theme="dark"] .nav-links a:hover, [data-theme="dark"] .nav-links a.active { color: #B22222; background: rgba(178,34,34,0.12); }
+    [data-theme="dark"] .theme-toggle { border-color: rgba(178,34,34,0.4); color: #CC4444; }
+    [data-theme="dark"] .drawer { background: #140A0A; border-right-color: rgba(178,34,34,0.2); }
+    [data-theme="dark"] .drawer-brand { border-bottom-color: rgba(178,34,34,0.15); }
+    [data-theme="dark"] .drawer-brand-text em { color: #E8D5C4 !important; }
+    [data-theme="dark"] .drawer-links a { color: #A08080; }
+    [data-theme="dark"] .drawer-links a:hover { color: #B22222; background: rgba(178,34,34,0.12); }
+    [data-theme="dark"] .drawer-footer { border-top-color: rgba(178,34,34,0.15); }
+    [data-theme="dark"] .drawer-quote { color: #A08080; }
+    [data-theme="dark"] #home, [data-theme="dark"] #about, [data-theme="dark"] #gallery,
+    [data-theme="dark"] #blog, [data-theme="dark"] #social { background: #0D0808; }
+    [data-theme="dark"] #social { border-top-color: rgba(178,34,34,0.15); }
+    [data-theme="dark"] .hero-title { color: #E8D5C4; }
+    [data-theme="dark"] .hero-vvv { color: #5A5050; }
+    [data-theme="dark"] .hero-quote { color: #A08080; }
+    [data-theme="dark"] .section-title { color: #E8D5C4; }
+    [data-theme="dark"] .about-text p { color: #B8A090; }
+    [data-theme="dark"] .about-tag { background: #E8D5C4; color: #0D0808; }
+    [data-theme="dark"] .fact-value { color: #E8D5C4; }
+    [data-theme="dark"] .gallery-card { background: #1A0A0A; }
+    [data-theme="dark"] .gallery-card-info { border-top-color: #2A1212; }
+    [data-theme="dark"] .gallery-card-title { color: #E8D5C4; }
+    [data-theme="dark"] .gallery-card-meta { color: #7A6060; }
+    [data-theme="dark"] .blog-card { border-top-color: rgba(232,213,196,0.3); }
+    [data-theme="dark"] .blog-title { color: #E8D5C4; }
+    [data-theme="dark"] .blog-excerpt { color: #A08080; }
+    [data-theme="dark"] .blog-read { color: #E8D5C4; border-color: #5A4040; }
+    [data-theme="dark"] .blog-read:hover { color: #B22222; border-color: #B22222; }
+    [data-theme="dark"] .social-card { background: #1A0A0A; box-shadow: none; }
+    [data-theme="dark"] .social-handle { color: #E8D5C4; }
+    [data-theme="dark"] .social-desc { color: #A08080; }
+    [data-theme="dark"] .social-arrow { color: #A08080; }
+    [data-theme="dark"] .hero-stats { border-top-color: rgba(178,34,34,0.2); }
+    [data-theme="dark"] .about-facts { border-top-color: #3A2020; }
   </style>
+  <script>(function(){var t=localStorage.getItem('jc-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
 </head>
 <body>
 
@@ -1160,6 +1210,12 @@
         <li><a href="#gallery">Gallery</a></li>
         <li><a href="#blog">Blog</a></li>
       </ul>
+
+      <!-- Theme toggle -->
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" onclick="toggleTheme()">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
 
       <!-- Mobile toggle -->
       <button class="nav-toggle" id="navToggle" onclick="toggleDrawer()" aria-label="Open menu">
@@ -1513,6 +1569,14 @@
   </div>
 
   <script>
+    // ── Theme ──────────────────────────────────────────────────
+    function toggleTheme() {
+      var html = document.documentElement;
+      var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('jc-theme', next);
+    }
+
     // ── Drawer / SimpleHeader ──────────────────────────────────
     function toggleDrawer() {
       const open = document.getElementById('drawer').classList.toggle('open');
